@@ -11,6 +11,6 @@ email-validator>=2.2.0
 
 # Виджет чата / RAG по FAQ (нужна переменная окружения OPENAI_API_KEY)
 openai==1.60.0
-faiss-cpu==1.8.0.post1
-numpy==1.26.4
+faiss-cpu>=1.12.0
+numpy>=1.26.4,<3
 
