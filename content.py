@@ -33,8 +33,9 @@ CASES_DATA = {
         <p>Сотрудники и клиенты задают вопросы в Telegram и получают ответы по актуальным регламентам — HR, постпродажа или продажи, в зависимости от роли.</p>
         <ul>
             <li>RAG: поиск по базе знаний (Google Docs)</li>
-            <li>Три роли в одном боте, кеш повторяющихся вопросов, логи обращений</li>
+            <li>Три роли в одном боте (как пример), кеш повторяющихся вопросов, логи обращений</li>
         </ul>
+        <p><a href="https://github.com/Kamysssh/Corporate_RAG_Assistant" target="_blank" rel="noopener noreferrer">Ссылка на репозиторий GitHub</a></p>
         """,
         "image": "telegram-bot.jpg",
     },
