@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Главная — AI-ассистенты для бизнеса{% endblock %}
+
+{% block content %}
+<!-- Hero блок -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4 animate-fade-in">
+                    AI-ассистенты и чат-боты<br>
+                    <span class="text-primary">для вашего бизнеса</span>
+                </h1>
+                <p class="lead mb-4 animate-fade-in-delay">
+                    Помогаю внедрять умных помощников на базе ваших документов и регламентов:
+                    меньше рутины для сотрудников и поддержки, быстрее ответы клиентам — без лишнего технического жаргона.
+                </p>
+                <div class="animate-fade-in-delay-2">
+                    <a href="{{ url_for('contact') }}" class="btn btn-primary btn-lg me-3">
+                        <i class="bi bi-envelope"></i> Связаться с нами
+                    </a>
+                    <a href="{{ url_for('cases') }}" class="btn btn-outline-primary btn-lg">
+                        <i class="bi bi-briefcase"></i> Наши кейсы
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-image animate-slide-in">
+                    <i class="bi bi-laptop-code display-1 text-primary"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Описание -->
+<section class="py-5" style="background-color: var(--light-color);">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="mb-4">Специализация</h2>
+                <p class="lead">
+                    Создаю AI-ассистентов и Telegram-ботов для компаний: ответы опираются на ваши внутренние материалы,
+                    чтобы снять нагрузку с руководителей и линии поддержки. Фокус — экономия времени и денег заказчика,
+                    а не перечисление моделей и технологий.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Кейсы на главной -->
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="mb-3">Условные кейсы</h2>
+                <p class="text-muted">Примеры задач, которые можно закрыть такими решениями</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            {% for case_id, case in cases.items() %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 case-card">
+                    <div class="card-body">
+                        <div class="case-icon mb-3">
+                            <i class="bi bi-{{ 'chat-dots' if case_id == 'telegram_bot' else 'cart' if case_id == 'online_store' else 'gear' if case_id == 'crm_automation' else 'globe' if case_id == 'corporate_site' else 'robot' }} display-4 text-primary"></i>
+                        </div>
+                        <h5 class="card-title">{{ case.title }}</h5>
+                        <p class="card-text text-muted">{{ case.short_description }}</p>
+                        <a href="{{ url_for('case_detail', case_id=case_id) }}" class="btn btn-outline-primary">
+                            Подробнее <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-5">
+            <a href="{{ url_for('cases') }}" class="btn btn-primary btn-lg">
+                Все кейсы <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Призыв к действию -->
+<section class="py-5" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);">
+    <div class="container text-center">
+        <h2 class="mb-4 text-white">Обсудим вашу задачу?</h2>
+        <p class="lead mb-4 text-white-50">Опишите ситуацию в форме — предложу понятный следующий шаг без обязательств</p>
+        <a href="{{ url_for('contact') }}" class="btn btn-light btn-lg">
+            <i class="bi bi-envelope"></i> Отправить заявку
+        </a>
+    </div>
+</section>
+{% endblock %}
+
