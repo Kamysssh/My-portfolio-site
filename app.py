@@ -1,10 +1,11 @@
 """
 Flask-приложение: витрина личного бренда в нише AI-ассистентов и Telegram-ботов для бизнеса.
-Кейсы, форма обратной связи, админ-панель заявок, опционально RAG-чат по FAQ (нужен OPENAI_API_KEY).
+Кейсы, форма обратной связи, админ-панель заявок, опционально RAG-чат по FAQ (нужен PROXYAPI_KEY).
 """
 import os
 import logging
 from datetime import datetime
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
@@ -12,8 +13,11 @@ from wtforms import StringField, TextAreaField, EmailField, TelField, SelectFiel
 from wtforms.validators import DataRequired, Email, Length
 from flask_wtf import FlaskForm, CSRFProtect
 from config import Config
-from content import CASES_DATA, SUBJECT_CHOICES, SUBJECT_LABELS
+from content import CASES_DATA, SUBJECT_CHOICES, SUBJECT_LABELS, get_published_cases
+from backend.llm_client import is_llm_configured
 from backend.rag_index import generate_answer as rag_generate_answer
+
+load_dotenv()
 
 # Настройка логирования
 logging.basicConfig(
@@ -104,18 +108,18 @@ class AdminLoginForm(FlaskForm):
 def index():
     """Главная страница"""
     logger.info('Главная страница запрошена')
-    return render_template('index.html', cases=CASES_DATA)
+    return render_template('index.html', cases=get_published_cases())
 
 @app.route('/cases')
 def cases():
     """Страница со всеми кейсами"""
     logger.info('Страница кейсов запрошена')
-    return render_template('cases.html', cases=CASES_DATA)
+    return render_template('cases.html', cases=get_published_cases())
 
 @app.route('/case/<case_id>')
 def case_detail(case_id):
     """Страница с детальным описанием кейса"""
-    case = CASES_DATA.get(case_id)
+    case = get_published_cases().get(case_id)
     if not case:
         flash('Кейс не найден', 'error')
         return redirect(url_for('cases'))
@@ -227,26 +231,44 @@ def delete_contact(contact_id):
 @app.route('/chat', methods=['POST'])
 @csrf.exempt
 def chat():
-    """API-эндпоинт для RAG-чатбота на главной странице."""
+    """API-эндпоинт для RAG-чатбота (поиск по базе + память диалога)."""
     data = request.get_json(silent=True) or {}
     message = (data.get('message') or '').strip()
     top_k = data.get('top_k') or 3
+    history = data.get('history') or []
 
     try:
-        top_k = int(top_k)
+        top_k = max(1, min(int(top_k), 10))
     except (TypeError, ValueError):
         top_k = 3
+
+    if not isinstance(history, list):
+        history = []
 
     if not message:
         return jsonify({'error': 'Пустое сообщение'}), 400
 
+    if not is_llm_configured():
+        return jsonify({
+            'error': 'Чат временно недоступен: не задан PROXYAPI_KEY в .env',
+        }), 503
+
     try:
-        result = rag_generate_answer(message, top_k=top_k)
+        result = rag_generate_answer(message, top_k=top_k, history=history)
         logger.info('Чат-бот обработал сообщение пользователя')
         return jsonify(result)
+    except RuntimeError as e:
+        logger.error(f'Ошибка конфигурации RAG: {e}')
+        return jsonify({'error': str(e)}), 503
     except Exception as e:
         logger.exception(f'Ошибка RAG-чатбота: {e}')
         return jsonify({'error': 'Ошибка при обработке запроса чат-бота'}), 500
+
+
+@app.route('/health')
+def health():
+    """Проверка работоспособности приложения (для деплоя)."""
+    return jsonify({'status': 'ok'})
 
 # Инициализация базы данных
 def init_db():

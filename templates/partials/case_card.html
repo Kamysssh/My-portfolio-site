@@ -1,0 +1,18 @@
+{# Карточка кейса: case_id, case #}
+<div class="col-sm-6 col-lg-6 cases-portfolio-col">
+    <div class="card h-100 case-card">
+        <div class="card-body d-flex flex-column">
+            {% if case.badge %}
+            <span class="case-badge">{{ case.badge }}</span>
+            {% endif %}
+            <div class="case-icon mb-3">
+                <i class="bi bi-{{ case.icon }} display-4 text-primary"></i>
+            </div>
+            <h5 class="card-title">{{ case.title }}</h5>
+            <p class="card-text text-muted flex-grow-1">{{ case.short_description }}</p>
+            <a href="{{ url_for('case_detail', case_id=case_id) }}" class="btn btn-outline-primary mt-auto align-self-start">
+                Подробнее <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>

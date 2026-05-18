@@ -197,8 +197,17 @@ function initChatWidget() {
     const messagesContainer = document.getElementById('chat-messages');
     const typingIndicator = document.getElementById('chat-typing');
 
+    /** История диалога для контекста (память ассистента) */
+    let chatHistory = [];
+
     if (!launcher || !widget || !form || !input || !messagesContainer) {
         return;
+    }
+
+    function scrollChatToBottom() {
+        requestAnimationFrame(function() {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        });
     }
 
     function openWidget() {
@@ -206,6 +215,7 @@ function initChatWidget() {
         widget.classList.add('open');
         widget.setAttribute('aria-hidden', 'false');
         input.focus();
+        scrollChatToBottom();
     }
 
     function closeWidget() {
@@ -236,7 +246,7 @@ function initChatWidget() {
 
         msg.appendChild(bubble);
         messagesContainer.appendChild(msg);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        scrollChatToBottom();
     }
 
     async function sendMessage(message) {
@@ -257,19 +267,26 @@ function initChatWidget() {
                 },
                 body: JSON.stringify({
                     message: message,
-                    top_k: 3
+                    top_k: 3,
+                    history: chatHistory
                 })
             });
 
+            const data = await response.json().catch(() => ({}));
+
             if (!response.ok) {
-                throw new Error('Network error');
+                const errText = data.error || 'Не удалось получить ответ от ассистента.';
+                appendMessage(errText, 'bot');
+                return;
             }
 
-            const data = await response.json();
             if (data.error) {
                 appendMessage(data.error, 'bot');
             } else if (data.answer) {
                 appendMessage(data.answer, 'bot');
+                if (Array.isArray(data.history)) {
+                    chatHistory = data.history;
+                }
             } else {
                 appendMessage('Не удалось получить ответ от ассистента.', 'bot');
             }

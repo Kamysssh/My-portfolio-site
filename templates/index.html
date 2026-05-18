@@ -55,26 +55,13 @@
     <div class="container">
         <div class="row mb-5">
             <div class="col-lg-8 mx-auto text-center">
-                <h2 class="mb-3">Условные кейсы</h2>
-                <p class="text-muted">Примеры задач, которые можно закрыть такими решениями</p>
+                <h2 class="mb-3">Кейсы из портфолио</h2>
+                <p class="text-muted">Реализованные и демонстрационные проекты — можно открыть и протестировать</p>
             </div>
         </div>
-        <div class="row g-4">
+        <div class="row g-4 justify-content-center cases-portfolio-grid">
             {% for case_id, case in cases.items() %}
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 case-card">
-                    <div class="card-body">
-                        <div class="case-icon mb-3">
-                            <i class="bi bi-{{ 'chat-dots' if case_id == 'telegram_bot' else 'cart' if case_id == 'online_store' else 'gear' if case_id == 'crm_automation' else 'globe' if case_id == 'corporate_site' else 'robot' }} display-4 text-primary"></i>
-                        </div>
-                        <h5 class="card-title">{{ case.title }}</h5>
-                        <p class="card-text text-muted">{{ case.short_description }}</p>
-                        <a href="{{ url_for('case_detail', case_id=case_id) }}" class="btn btn-outline-primary">
-                            Подробнее <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+                {% include 'partials/case_card.html' %}
             {% endfor %}
         </div>
         <div class="text-center mt-5">
@@ -96,4 +83,3 @@
     </div>
 </section>
 {% endblock %}
-

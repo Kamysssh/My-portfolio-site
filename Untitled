@@ -1,0 +1,14 @@
+# --- Flask / сайт ---
+SECRET_KEY=change-me-to-random-string-in-production
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=change-me-strong-password
+# DATABASE_URL=sqlite:///site.db
+
+# --- OpenAI (чат-виджет RAG) ---
+# Без ключа сайт и формы работают, но /chat вернёт ошибку 503
+OPENAI_API_KEY=sk-your-openai-key-here
+
+# Опционально: модели (значения по умолчанию уже заданы в backend/rag_index.py)
+# OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+# OPENAI_CHAT_MODEL=gpt-4.1-mini
+# CHAT_MAX_HISTORY=10

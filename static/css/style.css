@@ -182,6 +182,77 @@ body {
     color: var(--text-muted);
 }
 
+.case-card .card-title {
+    min-height: 3rem;
+    line-height: 1.35;
+}
+
+.cases-portfolio-grid {
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cases-portfolio-col {
+    display: flex;
+}
+
+.case-badge {
+    display: inline-block;
+    align-self: flex-start;
+    margin-bottom: 0.75rem;
+    padding: 0.25rem 0.65rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--primary-color);
+    background: rgba(108, 142, 255, 0.12);
+    border: 1px solid rgba(108, 142, 255, 0.35);
+    border-radius: 999px;
+}
+
+.case-badge-lg {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.85rem;
+}
+
+.case-detail-card {
+    border: 1px solid var(--border-color);
+    background-color: var(--card-bg);
+}
+
+.case-detail-divider {
+    border-color: var(--border-color);
+    opacity: 0.6;
+}
+
+.case-description {
+    color: var(--text-color);
+    line-height: 1.7;
+}
+
+.case-description ul {
+    padding-left: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.case-description li {
+    margin-bottom: 0.5rem;
+}
+
+.case-description code {
+    font-size: 0.9em;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    background: rgba(108, 142, 255, 0.15);
+    color: var(--primary-color);
+}
+
+.case-description a {
+    color: var(--primary-color);
+}
+
 /* Кнопки */
 .btn {
     transition: all 0.3s ease;
@@ -614,6 +685,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .chat-header {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -641,17 +713,41 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .chat-body {
-    flex: 1;
+    flex: 1 1 auto;
     display: flex;
     flex-direction: column;
+    min-height: 0; /* иначе flex-ребёнок не сжимается и прокрутка не работает */
+    overflow: hidden;
     padding: 8px 12px;
     background-color: var(--bg-color);
 }
 
 .chat-messages {
-    flex: 1;
+    flex: 1 1 auto;
+    min-height: 0;
     overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     padding-right: 4px;
+    scroll-behavior: smooth;
+}
+
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.45);
+    border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.7);
 }
 
 .chat-message {
@@ -689,6 +785,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .chat-typing-indicator {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     gap: 4px;
@@ -723,6 +820,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .chat-footer {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     padding: 8px;

@@ -14,24 +14,31 @@
                         <li class="breadcrumb-item active">{{ case.title }}</li>
                     </ol>
                 </nav>
-                
-                <div class="card mb-4">
-                    <div class="card-body">
+
+                <div class="card mb-4 case-detail-card">
+                    <div class="card-body p-4 p-md-5">
                         <div class="text-center mb-4">
-                            <i class="bi bi-{{ 'chat-dots' if case.id == 'telegram_bot' else 'cart' if case.id == 'online_store' else 'gear' if case.id == 'crm_automation' else 'globe' if case.id == 'corporate_site' else 'robot' }} display-1 text-primary"></i>
+                            {% if case.badge %}
+                            <span class="case-badge case-badge-lg mb-3">{{ case.badge }}</span>
+                            {% endif %}
+                            <div class="case-icon case-icon-lg mb-3">
+                                <i class="bi bi-{{ case.icon }} display-1 text-primary"></i>
+                            </div>
+                            <h1 class="card-title mb-0">{{ case.title }}</h1>
+                            <p class="text-muted mt-3 mb-0">{{ case.short_description }}</p>
                         </div>
-                        <h1 class="card-title text-center mb-4">{{ case.title }}</h1>
+                        <hr class="my-4 case-detail-divider">
                         <div class="case-description">
                             {{ case.description|safe }}
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="text-center mb-5">
-                    <a href="{{ url_for('contact') }}" class="btn btn-primary btn-lg me-3">
+                    <a href="{{ url_for('contact') }}" class="btn btn-primary btn-lg me-3 mb-2">
                         <i class="bi bi-envelope"></i> Обсудить проект
                     </a>
-                    <a href="{{ url_for('cases') }}" class="btn btn-outline-secondary btn-lg">
+                    <a href="{{ url_for('cases') }}" class="btn btn-outline-secondary btn-lg mb-2">
                         <i class="bi bi-arrow-left"></i> Все кейсы
                     </a>
                 </div>
@@ -40,4 +47,3 @@
     </div>
 </section>
 {% endblock %}
-
